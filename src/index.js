@@ -1,26 +1,25 @@
 import Hapi from '@hapi/hapi';
-import { Books } from './books.js';
+import routes from './routes.js';
 
 const init = async () => {
-    const server = Hapi.server({
-        port: 3000,
-        host: 'localhost'
-    });
+  const server = Hapi.server({
+    port: 5000,
+    host: 'localhost',
+    routes: {
+      cors: {
+        origin: ['*'],
+      },
+    },
+  });
+  server.route(routes);
 
-    const books = new Books();
-    server.route({
-        method: 'GET',
-        path: '/',
-        handler: books.index
-    });
-
-    await server.start();
-    console.log('Server running on %s', server.info.uri);
+  await server.start();
+  console.log('Server running on %s', server.info.uri);
 };
 
 process.on('unhandledRejection', (err) => {
-    console.log(err);
-    process.exit(1);
+  console.log(err);
+  process.exit(1);
 });
 
 init();
